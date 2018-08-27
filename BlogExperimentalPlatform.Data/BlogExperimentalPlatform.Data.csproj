@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj" />
+  </ItemGroup>
+
 </Project>
