@@ -23,7 +23,7 @@
         #endregion
 
         #region Properties
-        public IBaseRepository<T> Repository => repository;
+        protected IBaseRepository<T> Repository => repository;
         #endregion
 
         #region Methods
