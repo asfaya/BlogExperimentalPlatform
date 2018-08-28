@@ -2,6 +2,7 @@ namespace BlogExperimentalPlatform.Web
 {
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
+    using AutoMapper;
     using BlogExperimentalPlatform.Data;
     using BlogExperimentalPlatform.Web.AutofacConfig;
     using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,9 @@ namespace BlogExperimentalPlatform.Web
                 .AddDbContext<BlogDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Blog")));
 
+            // AutoMapper
+            services.AddAutoMapper();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory
@@ -54,7 +58,7 @@ namespace BlogExperimentalPlatform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
         {
             if (env.IsDevelopment())
             {
@@ -69,6 +73,8 @@ namespace BlogExperimentalPlatform.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
             app.UseMvc(routes =>
             {
