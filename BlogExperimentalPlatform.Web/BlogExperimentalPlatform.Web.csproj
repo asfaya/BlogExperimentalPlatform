@@ -21,6 +21,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -34,11 +35,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="tsconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="ClientApp\src\app\app-routing.module.ts" />
+    <None Remove="ClientApp\src\app\blogs\blog-data.service.ts" />
+    <None Remove="ClientApp\src\app\blogs\blog-edit.component.ts" />
+    <None Remove="ClientApp\src\app\blogs\blog-list.component.ts" />
+    <None Remove="ClientApp\src\app\blogs\blog-routing.module.ts" />
+    <None Remove="ClientApp\src\app\blogs\blog.module.ts" />
+    <None Remove="ClientApp\src\app\classes\BaseComponent.ts" />
+    <None Remove="ClientApp\src\app\classes\BaseDataService.ts" />
     <None Remove="ClientApp\src\app\classes\EntryStatus.ts" />
     <None Remove="ClientApp\src\app\interfaces\IBlog.ts" />
     <None Remove="ClientApp\src\app\interfaces\IBlogEntry.ts" />
@@ -49,16 +53,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="tsconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj" />
     <ProjectReference Include="..\BlogExperimentalPlatform.Data\BlogExperimentalPlatform.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\app-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\blogs\blog-data.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\blogs\blog-edit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\blogs\blog-list.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\blogs\blog-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\blogs\blog.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\classes\BaseComponent.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\classes\BaseDataService.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\classes\EntryStatus.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\IBlog.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\IBlogEntry.ts" />
