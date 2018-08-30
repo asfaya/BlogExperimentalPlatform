@@ -1,0 +1,38 @@
+<h1>Blog List</h1>
+
+<p *ngIf="!blogs"><em>Loading...</em></p>
+
+<table class='table' *ngIf="blogs">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Owner</th>
+      <th>Creation Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th>
+        <button type="button" class="btn btn-primary" (click)="add()">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Add
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let blog of blogs">
+      <td>{{ blog.name }}</td>
+      <td>{{ blog.owner.fullName }}</td>
+      <td>{{ blog.creationDate | date: 'yyyy/MM/dd'}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><a class="btn btn-primary" [routerLink]="['/blogs/form',blog.id]"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a></td>
+      <td>
+        <button class="btn btn-danger" (click)="removeBlog(blog)">
+          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

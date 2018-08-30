@@ -1,0 +1,31 @@
+<h1>Add / Edit Blog</h1>
+
+<p *ngIf="loading"><em>Loading...</em></p>
+
+<div *ngIf="!loading">
+  <form [formGroup]="blogForm" (ngSubmit)="saveBlog(blogForm.value, blogForm.valid)" novalidate>
+
+    <button type="button" class="btn btn-danger" (click)="back()">
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>Back
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="!blogForm.valid || !submitEnabled">
+      <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Save
+    </button>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="control-label" for="txtBlogName">Blog Name</label>
+          <input formControlName="name" type="text" class="form-control" id="txtBlogName" name="txtBlogName" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4" formGroupName="owner">
+          <label class="control-label" for="txtBlogOwner">Owner</label>
+          <input formControlName="fullName" type="text" class="form-control" id="txtBlogOwner" name="txtBlogOwner" />
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

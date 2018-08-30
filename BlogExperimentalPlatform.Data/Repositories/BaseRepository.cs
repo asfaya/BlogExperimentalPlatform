@@ -92,13 +92,31 @@
 
         public virtual async Task<T> AddOrUpdateAsync(T entity)
         {
-            // Not for updating tree graphs
-            // Need to override for that
-            var existingItem = await BlogContext.Set<T>().FindAsync(entity.Id);
-            if (existingItem == null)
-                await BlogContext.Set<T>().AddAsync(entity);
-            else
-                BlogContext.Entry(existingItem).CurrentValues.SetValues(entity);
+            // Not for updating full tree graphs
+            // Will add / update the entity sent as parameter, not the related ones.
+            BlogContext.ChangeTracker.TrackGraph(entity, e =>
+            {
+                if (e.Entry.Entity == entity)
+                {
+                    if ((e.Entry.Entity as T).Id > 0)
+                        e.Entry.State = EntityState.Modified;
+                    else
+                        e.Entry.State = EntityState.Added;
+                }
+                else
+                {
+                    var trackedEntity = BlogContext.ChangeTracker.Entries().FirstOrDefault(ent => ((Entity)ent.Entity).Id == ((Entity)e.Entry.Entity).Id && ent.Entity.GetType() == e.Entry.Entity.GetType());
+                    if (trackedEntity != null && trackedEntity.State == EntityState.Detached)
+                    {
+                        trackedEntity.State = EntityState.Unchanged;
+                    }
+                    else
+                    {
+                        if (trackedEntity == null)
+                            e.Entry.State = EntityState.Unchanged;
+                    }
+                }
+            });
 
             await BlogContext.SaveChangesAsync();
 

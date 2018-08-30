@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 declare let alertify: any;
-//var alertify = require("alertifyjs");
 
 @Injectable()
 export class NotificationService {
