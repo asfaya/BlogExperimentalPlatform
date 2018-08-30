@@ -24,6 +24,7 @@
     "@angular/platform-server": "6.1.4",
     "@angular/router": "6.1.4",
     "@nguniversal/module-map-ngfactory-loader": "^6.1.0",
+    "alertifyjs": "^1.11.1",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.7",
