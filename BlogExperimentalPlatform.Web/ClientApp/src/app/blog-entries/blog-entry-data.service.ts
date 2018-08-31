@@ -1,7 +1,7 @@
 import { Injectable, Inject }                     from "@angular/core";
 import { HttpClient, HttpHeaders, HttpResponse }  from "@angular/common/http";
 import { Observable }                             from "rxjs";
-import { catchError, map }                        from 'rxjs/operators';
+import { catchError, map, tap }                   from 'rxjs/operators';
 import { IBlogEntry }                             from "../interfaces/IBlogEntry";
 
 import { IPagination }                            from "../interfaces/IPagination";
@@ -48,5 +48,29 @@ export class BlogEntryDataService extends BaseDataService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  saveBlogEntry(blogEntry: IBlogEntry): Observable<IBlogEntry> {
+    if (blogEntry.id) {
+      return this.updateBlogEntry(blogEntry);
+    } else {
+      return this.addBlogEntry(blogEntry);
+    }
+  }
+
+  private updateBlogEntry(blogEntry: IBlogEntry): Observable<IBlogEntry> {
+    let headers: HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
+
+    return this.http.put<IBlogEntry>(this.baseUrl + "api/blogEntries/" + blogEntry.id, blogEntry, { headers: headers }).pipe(
+      tap(_ => {}),
+      catchError(this.handleError));
+  }
+
+  private addBlogEntry(blogEntry: IBlogEntry): Observable<IBlogEntry> {
+    let headers: HttpHeaders = new HttpHeaders().set("Content-Type", "application/json");
+
+    return this.http.post<IBlogEntry>(this.baseUrl + "api/blogEntries/", blogEntry, { headers: headers }).pipe(
+      tap(_ => {}),
+      catchError(this.handleError));
   }
 }

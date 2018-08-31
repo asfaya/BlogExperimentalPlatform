@@ -1,3 +1,50 @@
-<p>
-    blog-entry-edit works!
-</p>
+<h1>Add / Edit Blog Entry</h1>
+
+<p *ngIf="loading"><em>Loading...</em></p>
+
+<div *ngIf="!loading">
+  <form [formGroup]="blogEntryForm" (ngSubmit)="saveBlogEntry(blogEntryForm.value, blogEntryForm.valid)" novalidate>
+
+    <button type="button" class="btn btn-danger" (click)="back()">
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>Back
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="!blogEntryForm.valid || !submitEnabled">
+      <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Save
+    </button>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4" formGroupName="blog">
+          <label class="control-label" for="txtBlogName">Blog Name</label>
+          <input formControlName="name" type="text" class="form-control" id="txtBlogName" name="txtBlogName" />
+        </div>
+      </div>
+      <div class="row" formGroupName="blog">
+        <div class="col-md-4" formGroupName="owner">
+            <label class="control-label" for="txtBlogOwner">Owner</label>
+            <input formControlName="fullName" type="text" class="form-control" id="txtBlogOwner" name="txtBlogOwner" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="control-label" for="txtBlogEntryTitle">Title</label>
+          <input formControlName="title" type="text" class="form-control" id="txtBlogEntryTitle" name="txtBlogEntryTitle" />
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="control-label" for="txtBlogEntryContent">Content</label>
+          <textarea formControlName="content" class="form-control" id="txtBlogEntryContent" name="txtBlogEntryContent" cols="40" rows="10"></textarea>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-4">
+              <label class="control-label" for="ddlEntryStatus">Entry Status</label>
+            <select formControlName="status" name="ddlEntryStatus" class="form-control">
+                <option *ngFor="let status of statuses | enumKeyValuelist" [value]="status.key">{{ status.value }}</option>
+              </select>
+          </div>
+      </div>
+    </div>
+  </form>
+</div>

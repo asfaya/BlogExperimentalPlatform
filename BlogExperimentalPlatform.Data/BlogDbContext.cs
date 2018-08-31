@@ -56,7 +56,7 @@
             modelBuilder.Entity<BlogEntryUpdate>().ToTable("BlogEntryUpdates").HasKey(beu => beu.Id);
             modelBuilder.Entity<BlogEntryUpdate>().Property(beu => beu.Id).UseSqlServerIdentityColumn().IsRequired();
             modelBuilder.Entity<BlogEntryUpdate>().Property(beu => beu.UpdateMoment).IsRequired().HasDefaultValue(DateTime.Now);
-            modelBuilder.Entity<BlogEntryUpdate>().HasQueryFilter(p => !p.Deleted);
+            modelBuilder.Entity<BlogEntryUpdate>().Ignore(beu => beu.Deleted);
         }
         #endregion
     }

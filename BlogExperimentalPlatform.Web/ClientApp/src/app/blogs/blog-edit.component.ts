@@ -109,7 +109,7 @@ export class BlogEditComponent extends BaseComponent {
       // Save
       this.dataService.saveBlog(this.blog)
         .subscribe(() => {
-            this.notificationService.printSuccessMessage("The blog '" + value.name + " has been correctly saved.");
+            this.notificationService.printSuccessMessage("The blog '" + value.name + "' has been correctly saved.");
             this.back();  
         },
         (error: string): any => {

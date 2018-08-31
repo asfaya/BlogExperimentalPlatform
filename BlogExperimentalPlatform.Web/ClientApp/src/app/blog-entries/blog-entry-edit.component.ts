@@ -28,6 +28,7 @@ export class BlogEntryEditComponent extends BaseComponent {
   blogEntry     : IBlogEntry;
   submitEnabled : boolean = true;
   blogEntryForm : FormGroup;
+  statuses = EntryStatus;
 
   constructor(
     notificationService: NotificationService,
@@ -57,7 +58,7 @@ export class BlogEntryEditComponent extends BaseComponent {
         this.getBlogEntry(this.id).subscribe(
           (res: IBlogEntry) => {
             this.blogEntry = res;
-            //this.bindForm();
+            this.bindForm();
             this.loading = false;
           },
           error => {
@@ -105,6 +106,48 @@ export class BlogEntryEditComponent extends BaseComponent {
       deleted: false
     }
     return emptyBlogEntry;
+  }
+
+  bindForm(): void {
+    this.blogEntryForm = this.fb.group({
+      id: [this.blogEntry.id, []],
+      title: [this.blogEntry.title, [Validators.required]],
+      content: [this.blogEntry.content, [Validators.required]],
+      blog: this.fb.group({
+        id: [this.blogEntry.blog.id, []],
+        name: [{ value: this.blogEntry.blog.name, disabled: true }, []],
+        owner: this.fb.group({
+          id: [this.blogEntry.blog.owner.id, []],
+          fullName: [{ value: this.blogEntry.blog.owner.fullName, disabled: true }, []],
+          userName: [{ value: this.blogEntry.blog.owner.userName, disabled: true }, []],
+        })
+      }),
+      status: [this.blogEntry.status, [Validators.required]]
+    }); 
+  }
+
+  saveBlogEntry(value: any, valid: boolean): void {
+    if (valid) {
+      // Prevent multiple submits
+      this.submitEnabled = false;
+
+      // Set the only changed field to the entity
+      this.blogEntry.title = value.title;
+      this.blogEntry.content = value.content;
+      this.blogEntry.status = value.status;
+
+      // Save
+      this.dataService.saveBlogEntry(this.blogEntry)
+        .subscribe(() => {
+            this.notificationService.printSuccessMessage("The blog entry '" + value.title + "' has been correctly saved.");
+            this.back();  
+        },
+        (error: string): any => {
+            this.notificationService.printErrorMessage("There's been an error trying to save the blog entry - " + error);
+            // Reenable submit if error (go back if succeeds)
+            this.submitEnabled = true;
+        });
+    }
   }
 
   getCurrentUser(): IUser {
