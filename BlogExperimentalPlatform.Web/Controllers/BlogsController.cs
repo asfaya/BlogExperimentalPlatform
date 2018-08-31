@@ -9,11 +9,12 @@
     using BlogExperimentalPlatform.Business.Services;
     using BlogExperimentalPlatform.Web.DTOs;
     using FluentValidation.AspNetCore;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogsController : ControllerBase
+    public class BlogsController : BaseController
     {
         #region Members
         private readonly IBlogService blogService;
@@ -21,7 +22,8 @@
         #endregion
 
         #region Constructor
-        public BlogsController(IBlogService blogService, IMapper mapper)
+        public BlogsController(IBlogService blogService, IMapper mapper, IUserService userService)
+            : base(userService)
         {
             this.blogService = blogService ?? throw new ArgumentNullException("IBlogService DI failed");
             this.mapper = mapper ?? throw new ArgumentNullException("AutoMapper DI failed");
@@ -55,8 +57,9 @@
 
         // POST api/blogs/
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type=typeof(BlogDTO))]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BlogDTO))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Post([CustomizeValidator(RuleSet = "BlogAddOrUpdate")]BlogDTO blogDTO)
         {
             if (!ModelState.IsValid)
@@ -65,6 +68,7 @@
             try
             {
                 var blog = mapper.Map<Blog>(blogDTO);
+                blog.OwnerId = LoggedInUserId;
                 blog = await blogService.AddOrUpdateAsync(blog);
                 blogDTO = mapper.Map<BlogDTO>(blog);
             }
@@ -79,7 +83,9 @@
         // PUT api/blogs/5
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BlogDTO))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [CustomizeValidator(RuleSet = "BlogAddOrUpdate")]BlogDTO blogDTO)
         {
             if (!ModelState.IsValid)
@@ -87,7 +93,12 @@
 
             try
             {
-                var blog = mapper.Map<Blog>(blogDTO);
+                var blog = await blogService.GetAsync(id);
+
+                if (blog.OwnerId != LoggedInUserId)
+                    return Forbid("The user is not the owner of the blog");
+
+                mapper.Map<BlogDTO, Blog>(blogDTO, blog);
                 blog = await blogService.AddOrUpdateAsync(blog);
                 blogDTO = mapper.Map<BlogDTO>(blog);
             }
@@ -99,14 +110,21 @@
             return Ok(blogDTO);
         }
 
-        // DELETE api/smartTvRecipe/5
+        // DELETE api/blogs/5
         [HttpDelete("{id}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
+                var blog = await blogService.GetAsync(id);
+
+                if (blog.OwnerId != LoggedInUserId)
+                    return Forbid("The user is not the owner of the blog");
+
                 await blogService.DeleteAsync(id);
             }
             catch

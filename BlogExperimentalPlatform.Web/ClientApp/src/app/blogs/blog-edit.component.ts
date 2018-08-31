@@ -1,16 +1,16 @@
-import { Component }                        from '@angular/core';
+import { Component }                        from "@angular/core";
 import { Router }                           from "@angular/router";
-import { ActivatedRoute }                   from '@angular/router';
-import { FormGroup }                        from '@angular/forms';
-import { FormBuilder, Validators }          from '@angular/forms';
-import { BlogDataService }                  from './blog-data.service';
-import { of as observableOf, Observable }   from 'rxjs';
+import { ActivatedRoute }                   from "@angular/router";
+import { FormGroup }                        from "@angular/forms";
+import { FormBuilder, Validators }          from "@angular/forms";
+import { BlogDataService }                  from "./blog-data.service";
+import { of as observableOf, Observable }   from "rxjs";
 
 import { BaseComponent }                    from "../classes/BaseComponent";
 import { NotificationService }              from "../services/notification.service";
+import { AuthenticationService }            from "../services/authentication.service";
 
-import { IBlog }                            from '../Interfaces/IBlog';
-import { IUser}                             from '../Interfaces/IUser';
+import { IBlog }                            from "../Interfaces/IBlog";
 
 @Component({
   selector: 'blog-edit',
@@ -28,11 +28,12 @@ export class BlogEditComponent extends BaseComponent {
   constructor(
     private dataService: BlogDataService,
     notificationService: NotificationService,
+    authenticationService: AuthenticationService, 
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder) {
 
-    super(notificationService);
+    super(notificationService, authenticationService);
   }
 
   ngOnInit(): void {
@@ -73,19 +74,6 @@ export class BlogEditComponent extends BaseComponent {
     return emptyBlog;
   }
 
-  getCurrentUser(): IUser {
-    // So far a dummy
-    // Will return hard-coded user until security is created
-    var dummyUser: IUser = {
-      id: 1,
-      fullName: "Andres Faya",
-      userName: "asfaya",
-      deleted: false
-    };
-
-    return dummyUser;
-  }
-
   bindForm(): void {
     this.blogForm = this.fb.group({
       id: [this.blog.id, []],
@@ -109,7 +97,7 @@ export class BlogEditComponent extends BaseComponent {
       // Save
       this.dataService.saveBlog(this.blog)
         .subscribe(() => {
-            this.notificationService.printSuccessMessage("The blog '" + value.name + "' has been correctly saved.");
+            this.notificationService.printSuccessMessage("The blog '" + value.name + " has been correctly saved.");
             this.back();  
         },
         (error: string): any => {

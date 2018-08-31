@@ -1,6 +1,7 @@
 import { Component }                          from '@angular/core';
 import { Router }                             from "@angular/router";
 import { NotificationService }                from "../services/notification.service";
+import { AuthenticationService }              from "../services/authentication.service";
 import { BaseComponent }                      from "../classes/BaseComponent";
 
 import { Observable, throwError }             from 'rxjs';
@@ -31,8 +32,9 @@ export class BlogEntryListComponent extends BaseComponent {
     private dataService: BlogEntryDataService,
     private blogDataService: BlogDataService,
     notificationService: NotificationService,
+    authenticationService: AuthenticationService,
     private router: Router, ) {
-    super(notificationService);
+    super(notificationService, authenticationService);
   }
 
   ngOnInit() {

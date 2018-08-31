@@ -10,8 +10,8 @@
         {
             RuleSet("UserAddOrUpdate", () =>
             {
-                RuleFor(u => u.FullName).NotEmpty().WithMessage("User full name is mandatory.");
-                RuleFor(u => u.UserName).NotEmpty().WithMessage("Username is mandatory.");
+                RuleFor(u => u.FullName).NotEmpty().NotNull().WithMessage("User full name is mandatory.");
+                RuleFor(u => u.UserName).NotEmpty().NotNull().WithMessage("Username is mandatory.");
             });
         }
     }

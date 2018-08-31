@@ -11,6 +11,8 @@
 
         public Blog Blog { get; set; }
 
+        public int BlogId { get; set; }
+
         public DateTime CreationDate { get; set; }
 
         public DateTime LastUpdated { get; set; }

@@ -10,14 +10,16 @@
     using BlogExperimentalPlatform.Web.Classes;
     using BlogExperimentalPlatform.Web.DTOs;
     using FluentValidation.AspNetCore;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogEntriesController : ControllerBase
+    public class BlogEntriesController : BaseController
     {
         #region Members
         private readonly IBlogEntryService blogEntryService;
+        private readonly IBlogService blogService;
         private readonly IMapper mapper;
 
         private int page = 1;
@@ -25,9 +27,11 @@
         #endregion
 
         #region Constructor
-        public BlogEntriesController(IBlogEntryService blogEntryService, IMapper mapper)
+        public BlogEntriesController(IBlogEntryService blogEntryService, IBlogService blogService, IUserService userService, IMapper mapper)
+            : base(userService)
         {
             this.blogEntryService = blogEntryService ?? throw new ArgumentNullException("IBlogEntryService DI failed");
+            this.blogService = blogService ?? throw new ArgumentNullException("IBlogService DI failed");
             this.mapper = mapper ?? throw new ArgumentNullException("AutoMapper DI failed");
         }
         #endregion
@@ -35,10 +39,8 @@
         #region Methods
 
         // GET api/GetAllByBlogId/5
-        // GET api/GetAllByBlogId/5
         [HttpGet("GetAllByBlogId/{blogId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ICollection<BlogEntryDTO>))]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAllByBlogId(int blogId)
         {
             var pagination = Request.Headers["Pagination"];
@@ -64,9 +66,7 @@
         {
             var blogEntry = await blogEntryService.GetAsync(id, b => b.Blog, b => b.Blog.Owner);
             if (blogEntry == null)
-            {
                 return NotFound();
-            }
 
             return Ok(mapper.Map<BlogEntryDTO>(blogEntry));
         }
@@ -74,7 +74,9 @@
         // POST api/blogEntries/
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BlogEntryDTO))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Post([CustomizeValidator(RuleSet = "BlogEntryAddOrUpdate")]BlogEntryDTO blogEntryDTO)
         {
             if (!ModelState.IsValid)
@@ -82,6 +84,10 @@
 
             try
             {
+                var blog = await blogService.GetAsync(blogEntryDTO.Blog.Id);
+                if (blog.OwnerId != LoggedInUserId)
+                    return Forbid("The user is not the owner of the blog");
+
                 var blogEntry = mapper.Map<BlogEntry>(blogEntryDTO);
                 blogEntry = await blogEntryService.AddOrUpdateAsync(blogEntry);
                 blogEntryDTO = mapper.Map<BlogEntryDTO>(blogEntry);
@@ -97,7 +103,9 @@
         // PUT api/blogEntries/5
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(BlogEntryDTO))]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [CustomizeValidator(RuleSet = "BlogEntryAddOrUpdate")]BlogEntryDTO blogEntryDTO)
         {
             if (!ModelState.IsValid)
@@ -105,7 +113,11 @@
 
             try
             {
-                var blogEntry = mapper.Map<BlogEntry>(blogEntryDTO);
+                var blogEntry = await blogEntryService.GetAsync(id, be => be.Blog);
+                if (blogEntry.Blog.OwnerId != LoggedInUserId)
+                    return Forbid("The user is not the owner of the blog");
+
+                mapper.Map<BlogEntryDTO, BlogEntry>(blogEntryDTO, blogEntry);
                 blogEntry = await blogEntryService.AddOrUpdateAsync(blogEntry);
                 blogEntryDTO = mapper.Map<BlogEntryDTO>(blogEntry);
             }

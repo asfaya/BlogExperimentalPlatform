@@ -9,6 +9,7 @@ import { map, catchError }                from 'rxjs/operators';
 
 import { BaseComponent }                  from "../classes/BaseComponent";
 import { NotificationService }            from "../services/notification.service";
+import { AuthenticationService }          from "../services/authentication.service";
 
 import { IBlog }                          from '../Interfaces/IBlog';
 import { IBlogEntry }                     from '../Interfaces/IBlogEntry';
@@ -32,12 +33,13 @@ export class BlogEntryEditComponent extends BaseComponent {
 
   constructor(
     notificationService: NotificationService,
+    authenticationService: AuthenticationService,
     private dataService: BlogEntryDataService,
     private blogDataService: BlogDataService,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder) {
-    super(notificationService)
+    super(notificationService, authenticationService)
   }
 
   ngOnInit(): void {

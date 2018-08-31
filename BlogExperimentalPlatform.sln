@@ -5,11 +5,13 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Web", "BlogExperimentalPlatform.Web\BlogExperimentalPlatform.Web.csproj", "{73A354D3-E5E6-4437-8A1B-E4E76EC98E5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogExperimentalPlatform.Business", "BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj", "{77A7C2A8-9915-487C-A662-E4B338689BCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Business", "BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj", "{77A7C2A8-9915-487C-A662-E4B338689BCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogExperimentalPlatform.Data", "BlogExperimentalPlatform.Data\BlogExperimentalPlatform.Data.csproj", "{6EC9C7D4-E3E2-403E-94E0-6C1ACD9907AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Data", "BlogExperimentalPlatform.Data\BlogExperimentalPlatform.Data.csproj", "{6EC9C7D4-E3E2-403E-94E0-6C1ACD9907AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogExperimentalPlatform.Business.Test", "BlogExperimentalPlatform.Business.Test\BlogExperimentalPlatform.Business.Test.csproj", "{230A3587-E571-48B4-8C72-4BF341E87A7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Business.Test", "BlogExperimentalPlatform.Business.Test\BlogExperimentalPlatform.Business.Test.csproj", "{230A3587-E571-48B4-8C72-4BF341E87A7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogExperimentalPlatform.Utils", "BlogExperimentalPlatform.Utils\BlogExperimentalPlatform.Utils.csproj", "{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{230A3587-E571-48B4-8C72-4BF341E87A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{230A3587-E571-48B4-8C72-4BF341E87A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{230A3587-E571-48B4-8C72-4BF341E87A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

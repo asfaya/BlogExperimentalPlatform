@@ -9,6 +9,8 @@
 
         public User Owner { get; set; }
 
+        public int OwnerId { get; set; }
+
         public DateTime CreationDate { get; set; }
 
         public ICollection<BlogEntry> Entries { get; set; }
