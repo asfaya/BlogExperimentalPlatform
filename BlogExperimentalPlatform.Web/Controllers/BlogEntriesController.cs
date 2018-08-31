@@ -38,7 +38,7 @@
 
         #region Methods
 
-        // GET api/GetAllByBlogId/5
+        // GET api/blogEntries/GetAllByBlogId/5
         [HttpGet("GetAllByBlogId/{blogId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ICollection<BlogEntryDTO>))]
         public async Task<IActionResult> GetAllByBlogId(int blogId)
