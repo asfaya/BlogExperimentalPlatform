@@ -37,6 +37,51 @@
             return await Repository.GetAllAsync(includeProperties);
         }
 
+        public virtual async Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize)
+        {
+            EntityPage<T> page = new EntityPage<T>();
+            page.TotalEntities = await Repository.CountAsync();
+            page.TotalPages = (int)Math.Ceiling((double)page.TotalEntities / pageSize);
+
+            page.Entities = await Repository.GetPaginatedAsync(currentPage, pageSize);
+
+            return page;
+        }
+
+        public virtual async Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, params Expression<Func<T, object>>[] includeProperties)
+        {
+            EntityPage<T> page = new EntityPage<T>();
+            page.TotalEntities = await Repository.CountAsync();
+            page.TotalPages = (int)Math.Ceiling((double)page.TotalEntities / pageSize);
+
+            page.Entities = await Repository.GetPaginatedAsync(currentPage, pageSize, includeProperties);
+
+            return page;
+        }
+
+        public virtual async Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            EntityPage<T> page = new EntityPage<T>();
+            page.TotalEntities = await Repository.CountAsync(predicate);
+            page.TotalPages = (int)Math.Ceiling((double)page.TotalEntities / pageSize);
+
+            page.Entities = await Repository.GetPaginatedAsync(currentPage, pageSize, predicate, includeProperties);
+
+            return page;
+        }
+
+        public virtual async Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, Expression<Func<T, object>> sortCondition, bool sortDesc = false, params Expression<Func<T, object>>[] includeProperties)
+        {
+            EntityPage<T> page = new EntityPage<T>();
+            page.TotalEntities = await Repository.CountAsync(predicate);
+            page.TotalPages = (int)Math.Ceiling((double)page.TotalEntities / pageSize);
+
+            if (page.TotalEntities > 0)
+                page.Entities = await Repository.GetPaginatedAsync(currentPage, pageSize, predicate, sortCondition, sortDesc, includeProperties);
+
+            return page;
+        }
+
         public virtual async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
         {
             return await Repository.GetFilteredAsync(predicate);

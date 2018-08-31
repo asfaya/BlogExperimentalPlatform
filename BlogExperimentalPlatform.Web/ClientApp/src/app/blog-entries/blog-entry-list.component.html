@@ -1,0 +1,41 @@
+<h1>Blog Entries List</h1>
+
+<p *ngIf="loading"><em>Loading...</em></p>
+
+<div *ngIf="!loading">
+  <div class="row">
+    <div class="col-md-4">
+      <label for="ddlBlog">Blog</label>
+      <select id="ddlBlog" class="form-control" (change)="onBlogChanged($event.target.value)" [ngModel]="selectedBlogId">
+        <option *ngFor="let blog of blogs" [value]="blog.id">{{ blog.name }}</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <button type="button" class="btn btn-primary" (click)="addEntry()">
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Add Entry
+      </button>
+    </div>
+  </div>
+  <table>
+    <tr *ngFor="let blogEntry of blogEntries">
+      <td>
+        <h2>{{ blogEntry.title }}</h2>
+        <p>{{ blogEntry.content }}</p>
+        <button type="button" class="btn btn-primary" (click)="editEntry(blogEntry.id)">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Entry
+        </button>
+        <hr />
+      </td>
+    </tr>
+  </table>
+  <pagination [boundaryLinks]="true"
+              [totalItems]="totalItems"
+              [itemsPerPage]="itemsPerPage"
+              [(ngModel)]="currentPage"
+              class="pagination-sm"
+              previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+              (pageChanged)="pageChanged($event)">
+  </pagination>
+</div>

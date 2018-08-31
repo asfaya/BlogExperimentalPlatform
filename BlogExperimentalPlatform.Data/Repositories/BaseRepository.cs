@@ -31,8 +31,7 @@
         public virtual async Task<ICollection<T>> GetAllAsync()
         {
             IQueryable<T> query = BlogContext.Set<T>()
-                .AsNoTracking()
-                .Where(t => t.Deleted == false);
+                .AsNoTracking();
 
             return await query.ToListAsync();
         }
@@ -40,8 +39,7 @@
         public virtual async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = BlogContext.Set<T>()
-                .AsNoTracking()
-                .Where(t => t.Deleted == false);
+                .AsNoTracking();
 
             foreach (var includeProperty in includeProperties)
                 query = query.Include(includeProperty);
@@ -49,11 +47,66 @@
             return await query.ToListAsync();
         }
 
+        public virtual async Task<ICollection<T>> GetPaginatedAsync(int currentPage, int pageSize)
+        {
+            IQueryable<T> query = BlogContext.Set<T>()
+                .AsNoTracking();
+
+            return await query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+        }
+
+        public virtual async Task<ICollection<T>> GetPaginatedAsync(int currentPage, int pageSize, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = BlogContext.Set<T>()
+                .AsNoTracking();
+
+            foreach (var includeProperty in includeProperties)
+                query = query.Include(includeProperty);
+
+            return await query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+        }
+
+        public virtual async Task<ICollection<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = BlogContext.Set<T>()
+                .AsNoTracking()
+                .Where(predicate);
+
+            foreach (var includeProperty in includeProperties)
+                query = query.Include(includeProperty);
+
+            return await query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+        }
+
+        public virtual async Task<ICollection<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, Expression<Func<T, object>> sortCondition, bool sortDesc, params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = BlogContext.Set<T>()
+                .AsNoTracking()
+                .Where(predicate);
+
+            foreach (var includeProperty in includeProperties)
+                query = query.Include(includeProperty);
+
+            if (sortDesc)
+                query = query.OrderByDescending(sortCondition);
+            else
+                query = query.OrderBy(sortCondition);
+
+            return await query
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+        }
+
         public virtual async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate)
         {
             IQueryable<T> query = BlogContext.Set<T>()
                 .AsNoTracking()
-                .Where(t => t.Deleted == false)
                 .Where(predicate);
 
             return await query.ToListAsync();
@@ -63,7 +116,6 @@
         {
             IQueryable<T> query = BlogContext.Set<T>()
                 .AsNoTracking()
-                .Where(t => t.Deleted == false)
                 .Where(predicate);
 
             foreach (var includeProperty in includeProperties)
@@ -72,10 +124,23 @@
             return await query.ToListAsync();
         }
 
+        public virtual async Task<int> CountAsync()
+        {
+            return await BlogContext.Set<T>().AsNoTracking().CountAsync();
+        }
+
+        public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await BlogContext
+                .Set<T>()
+                .AsNoTracking()
+                .Where(predicate)
+                .CountAsync();
+        }
+
         public virtual async Task<T> GetSingleAsync(int id)
         {
             return await BlogContext.Set<T>()
-                .Where(t => t.Deleted == false)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
@@ -83,7 +148,7 @@
         public virtual async Task<T> GetSingleAsync(int id, params Expression<Func<T, object>>[] includeProperties)
         {
             var query = BlogContext.Set<T>().AsNoTracking()
-                .Where(t => t.Id == id && t.Deleted == false);
+                .Where(t => t.Id == id);
             foreach (var includeProperty in includeProperties)
                 query = query.Include(includeProperty);
 
@@ -126,7 +191,8 @@
         public virtual async Task DeleteAsync(int id)
         {
             // Soft delete implementation
-            var entity = await GetSingleAsync(id);
+            var entity = await BlogContext.Blogs
+                .FirstOrDefaultAsync(e => e.Id == id);
             entity.Deleted = true;
             await BlogContext.SaveChangesAsync();
         }

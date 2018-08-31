@@ -75,6 +75,11 @@
     <TypeScriptCompile Include="ClientApp\src\app\services\notification.service.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app\blog-entries\" />
+    <Folder Include="ClientApp\src\app\pagination\" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
