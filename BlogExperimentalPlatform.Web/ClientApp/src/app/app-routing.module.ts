@@ -6,6 +6,7 @@ const routes: Routes =
   [
     { path: '', component: HomeComponent },
     { path: 'blogs', loadChildren: './blogs/blog.module#BlogModule' },
+    { path: 'blogEntries', loadChildren: './blog-entries/blog-entry.module#BlogEntryModule' },
   ];
 
 @NgModule({

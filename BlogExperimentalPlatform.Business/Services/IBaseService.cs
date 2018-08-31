@@ -23,6 +23,14 @@
 
         Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties);
 
+        Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize);
+
+        Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, params Expression<Func<T, object>>[] includeProperties);
+
+        Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+
+        Task<EntityPage<T>> GetPaginatedAsync(int currentPage, int pageSize, Expression<Func<T, bool>> predicate, Expression<Func<T, object>> sortCondition, bool sortDesc = false, params Expression<Func<T, object>>[] includeProperties);
+
         Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate);
 
         Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
