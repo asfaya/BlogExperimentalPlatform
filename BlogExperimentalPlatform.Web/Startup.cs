@@ -1,10 +1,14 @@
 namespace BlogExperimentalPlatform.Web
 {
+    using System;
     using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using AutoMapper;
     using BlogExperimentalPlatform.Data;
     using BlogExperimentalPlatform.Web.AutofacConfig;
+    using BlogExperimentalPlatform.Web.Security;
+    using BlogExperimentalPlatform.Web.Settings;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -12,6 +16,7 @@ namespace BlogExperimentalPlatform.Web
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
 
     public class Startup
     {
@@ -30,6 +35,35 @@ namespace BlogExperimentalPlatform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public System.IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            // Registering configuration information to be used by container
+            services.AddOptions();
+
+            // Add settings from configuration
+            services.Configure<SecuritySettings>(Configuration.GetSection("SecuritySettings"));
+
+            // Configure security
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                   .AddJwtBearer(options =>
+                   {
+                       options.TokenValidationParameters =
+                            new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidateAudience = true,
+                                ValidateLifetime = true,
+                                ValidateIssuerSigningKey = true,
+                                ClockSkew = TimeSpan.Zero,
+                                ValidIssuer = Configuration["SecuritySettings:Issuer"],
+                                ValidAudience = Configuration["SecuritySettings:Audience"],
+                                IssuerSigningKey = JwtSecurityKey.Create(Configuration["SecuritySettings:Secret"])
+                            };
+                   });
+
+            services.Configure<IISOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });
+
             // Add EF core services.
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<BlogDbContext>(options =>
@@ -76,6 +110,8 @@ namespace BlogExperimentalPlatform.Web
             app.UseSpaStaticFiles();
 
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
