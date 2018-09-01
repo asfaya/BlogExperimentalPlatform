@@ -427,7 +427,7 @@
         }
 
         [Fact]
-        public async Task GetPaginatedAsync_WithPredicateIncludesWhenExists_ReturnsEmptyEntityPage()
+        public async Task GetPaginatedAsync_WithPredicateIncludesNotExists_ReturnsEmptyEntityPage()
         {
             // Arrange
             var entities = new List<Entity>();
@@ -502,7 +502,7 @@
         }
 
         [Fact]
-        public async Task GetPaginatedAsync_WithPredicateIncludesOrderWhenExists_ReturnsEmptyEntityPage()
+        public async Task GetPaginatedAsync_WithPredicateIncludesOrderNotExists_ReturnsEmptyEntityPage()
         {
             // Arrange
             EntityPage<Entity> page = new EntityPage<Entity>();

@@ -106,7 +106,6 @@ namespace BlogExperimentalPlatform.Web
             //     app.UseExceptionHandler("/Error");
             //     app.UseHsts();
             // }
-
             app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
