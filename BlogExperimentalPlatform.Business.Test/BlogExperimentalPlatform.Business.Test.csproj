@@ -16,4 +16,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj" />
+    <ProjectReference Include="..\BlogExperimentalPlatform.Utils\BlogExperimentalPlatform.Utils.csproj" />
+  </ItemGroup>
+
 </Project>
