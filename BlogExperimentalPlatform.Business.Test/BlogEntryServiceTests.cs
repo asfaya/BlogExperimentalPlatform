@@ -39,15 +39,22 @@
                 Deleted = false
             };
 
-            var expectedLastUpdateDateTime = DateTime.Now;
+            var resultBlogEntry = new BlogEntry()
+            {
+                Id = blogEntry.Id,
+                Title = blogEntry.Title,
+                Content = blogEntry.Content,
+                BlogId = blogEntry.BlogId,
+                CreationDate = blogEntry.CreationDate,
+                LastUpdated = DateTime.Now,
+                EntryUpdates = null,
+                Status = blogEntry.Status,
+                Deleted = blogEntry.Deleted
+            };
 
             blogEntryRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<BlogEntry>()))
-                .ReturnsAsync(() =>
-                {
-                    blogEntry.LastUpdated = expectedLastUpdateDateTime;
-                    return blogEntry;
-                });
+                .ReturnsAsync(resultBlogEntry);
 
             var service = GetService();
 
@@ -61,7 +68,7 @@
             Assert.Equal(blogEntry.Content, result.Content);
             Assert.Equal(blogEntry.BlogId, result.BlogId);
             Assert.Equal(blogEntry.CreationDate, result.CreationDate);
-            Assert.Equal(expectedLastUpdateDateTime, result.LastUpdated);
+            Assert.NotEqual(blogEntry.LastUpdated, result.LastUpdated);
             Assert.Equal(blogEntry.Status, result.Status);
             Assert.Equal(blogEntry.Deleted, result.Deleted);
 

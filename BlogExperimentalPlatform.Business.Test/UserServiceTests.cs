@@ -22,6 +22,8 @@ namespace BlogExperimentalPlatform.Business.Test
         #endregion
 
         #region Tests
+
+        #region AuthenticateAsync
         [Fact]
         public async Task AuthenticateAsync_WhenCorrect_ReturnsUser()
         {
@@ -110,7 +112,9 @@ namespace BlogExperimentalPlatform.Business.Test
 
             userRepositoryMock.Verify(m => m.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
         }
+        #endregion
 
+        #region GetUserByUserNameAsync
         [Fact]
         public async Task GetUserByUserNameAsync_WhenExists_ReturnsUser()
         {
@@ -164,7 +168,7 @@ namespace BlogExperimentalPlatform.Business.Test
 
             userRepositoryMock.Verify(m => m.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
         }
-
+        #endregion
 
         #endregion
 

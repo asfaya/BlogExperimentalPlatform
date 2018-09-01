@@ -3,6 +3,7 @@
     using BlogExperimentalPlatform.Business.Entities;
     using BlogExperimentalPlatform.Business.Repositories;
     using BlogExperimentalPlatform.Business.ServiceImplementations;
+    using FluentAssertions;
     using Moq;
     using System;
     using System.Threading.Tasks;
@@ -31,14 +32,24 @@
                 Id = 1,
                 Name = "Test Blog",
                 OwnerId = 1,
-                CreationDate = DateTime.Now,
+                CreationDate = DateTime.MinValue,
                 Entries = null,
                 Deleted = false
             };
 
+            var resultBlog = new Blog()
+            {
+                Id = blog.Id,
+                Name = blog.Name,
+                OwnerId = blog.OwnerId,
+                CreationDate = blog.CreationDate,
+                Entries = null,
+                Deleted = blog.Deleted
+            };
+
             blogRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<Blog>()))
-                .ReturnsAsync(blog);
+                .ReturnsAsync(resultBlog);
 
             var service = GetService();
 
@@ -47,11 +58,7 @@
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(blog.Id, result.Id);
-            Assert.Equal(blog.Name, result.Name);
-            Assert.Equal(blog.OwnerId, result.OwnerId);
-            Assert.Equal(blog.CreationDate, result.CreationDate);
-            Assert.Equal(blog.Deleted, result.Deleted);
+            result.Should().BeEquivalentTo(blog);
 
             blogRepositoryMock.Verify(m => m.AddOrUpdateAsync(It.IsAny<Blog>()), Times.Once);
         }
@@ -60,6 +67,7 @@
         public async Task AddOrUpdateAsync_WhenNew_ReturnsBlogWithId()
         {
             // Arrange
+
             var blog = new Blog()
             {
                 Id = 0,
@@ -70,15 +78,19 @@
                 Deleted = false
             };
 
-            var expectedCreationDateTime = DateTime.Now;
-
+            var resultBlog = new Blog()
+            {
+                Id = 1,
+                Name = blog.Name,
+                OwnerId = blog.OwnerId,
+                CreationDate = DateTime.Now,
+                Entries = null,
+                Deleted = false
+            };
+            
             blogRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<Blog>()))
-                .ReturnsAsync(() => {
-                    blog.Id = 1;
-                    blog.CreationDate = expectedCreationDateTime;
-                    return blog;
-                });
+                .ReturnsAsync(resultBlog);
 
             var service = GetService();
 
@@ -87,11 +99,10 @@
 
             // Assert
             Assert.NotNull(result);
-            Assert.NotEqual(0, result.Id);
+            Assert.NotEqual(blog.Id, result.Id);
             Assert.Equal(blog.Name, result.Name);
-            Assert.Equal(expectedCreationDateTime, result.CreationDate);
+            Assert.NotEqual(DateTime.MinValue, result.CreationDate);
             Assert.Equal(blog.OwnerId, result.OwnerId);
-            Assert.Equal(blog.CreationDate, result.CreationDate);
             Assert.Equal(blog.Deleted, result.Deleted);
 
             blogRepositoryMock.Verify(m => m.AddOrUpdateAsync(It.IsAny<Blog>()), Times.Once);
