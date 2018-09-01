@@ -50,6 +50,7 @@ namespace BlogExperimentalPlatform.Business.Test
             Assert.Equal(user.UserName, result.UserName);
             Assert.Equal(user.FullName, result.FullName);
             Assert.Equal(user.Password, result.Password);
+            Assert.Equal(user.Deleted, result.Deleted);
 
             userRepositoryMock.Verify(m => m.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
         }
@@ -138,6 +139,7 @@ namespace BlogExperimentalPlatform.Business.Test
             Assert.Equal(user.UserName, result.UserName);
             Assert.Equal(user.FullName, result.FullName);
             Assert.Equal(user.Password, result.Password);
+            Assert.Equal(user.Deleted, result.Deleted);
 
             userRepositoryMock.Verify(m => m.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
         }

@@ -3,7 +3,6 @@
     using BlogExperimentalPlatform.Business.Entities;
     using BlogExperimentalPlatform.Business.Repositories;
     using BlogExperimentalPlatform.Business.ServiceImplementations;
-    using BlogExperimentalPlatform.Utils;
     using Moq;
     using System;
     using System.Threading.Tasks;
@@ -24,7 +23,7 @@
 
         #region Tests
         [Fact]
-        public async Task AddOrUpdateAsync_WhenNotExisting_ReturnsBlog()
+        public async Task AddOrUpdateAsync_WhenExisting_ReturnsBlog()
         {
             // Arrange
             var blog = new Blog()
@@ -52,12 +51,13 @@
             Assert.Equal(blog.Name, result.Name);
             Assert.Equal(blog.OwnerId, result.OwnerId);
             Assert.Equal(blog.CreationDate, result.CreationDate);
+            Assert.Equal(blog.Deleted, result.Deleted);
 
             blogRepositoryMock.Verify(m => m.AddOrUpdateAsync(It.IsAny<Blog>()), Times.Once);
         }
 
         [Fact]
-        public async Task AddOrUpdateAsync_WhenExisting_ReturnsBlogWithId()
+        public async Task AddOrUpdateAsync_WhenNew_ReturnsBlogWithId()
         {
             // Arrange
             var blog = new Blog()
@@ -92,6 +92,7 @@
             Assert.Equal(expectedCreationDateTime, result.CreationDate);
             Assert.Equal(blog.OwnerId, result.OwnerId);
             Assert.Equal(blog.CreationDate, result.CreationDate);
+            Assert.Equal(blog.Deleted, result.Deleted);
 
             blogRepositoryMock.Verify(m => m.AddOrUpdateAsync(It.IsAny<Blog>()), Times.Once);
         }
