@@ -55,6 +55,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BlogExperimentalPlatform.Business\BlogExperimentalPlatform.Business.csproj" />
     <ProjectReference Include="..\BlogExperimentalPlatform.Data\BlogExperimentalPlatform.Data.csproj" />
+    <ProjectReference Include="..\BlogExperimentalPlatform.Utils\BlogExperimentalPlatform.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

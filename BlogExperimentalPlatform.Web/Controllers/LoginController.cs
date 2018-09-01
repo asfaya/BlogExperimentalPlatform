@@ -51,7 +51,7 @@
         public async Task<IActionResult> Authenticate([CustomizeValidator(RuleSet = "Login")]LoginDTO login)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest(ModelState);
 
             var user = await UserService.AuthenticateAsync(login.UserName, login.Password);
 

@@ -21,10 +21,10 @@
             var user = await this.GetUserByUserNameAsync(userName);
 
             if (user == null)
-                return null;
+                throw new BlogSystemException("Incorrect user name or password.");
 
             if (password.MD5Hash() != user.Password)
-                return null;
+                throw new BlogSystemException("Incorrect user name or password.");
 
             return user;
         }

@@ -7,6 +7,7 @@
     using AutoMapper;
     using BlogExperimentalPlatform.Business.Entities;
     using BlogExperimentalPlatform.Business.Services;
+    using BlogExperimentalPlatform.Utils;
     using BlogExperimentalPlatform.Web.DTOs;
     using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authorization;
@@ -74,7 +75,7 @@
             }
             catch
             {
-                return BadRequest("There's been an error while trying to add the blog");
+                throw new BlogSystemException("There's been an error while trying to add the blog entry");
             }
 
             return Ok(blogDTO);
@@ -96,7 +97,7 @@
                 var blog = await blogService.GetAsync(id);
 
                 if (blog.OwnerId != LoggedInUserId)
-                    return Forbid("The user is not the owner of the blog");
+                    return StatusCode((int)HttpStatusCode.Forbidden, "The user is not the owner of the blog.");
 
                 mapper.Map<BlogDTO, Blog>(blogDTO, blog);
                 blog = await blogService.AddOrUpdateAsync(blog);
@@ -104,7 +105,7 @@
             }
             catch
             {
-                return BadRequest("There's been an error while trying to add the blog");
+                throw new BlogSystemException("There's been an error while trying to add the blog entry");
             }
 
             return Ok(blogDTO);
@@ -123,13 +124,13 @@
                 var blog = await blogService.GetAsync(id);
 
                 if (blog.OwnerId != LoggedInUserId)
-                    return Forbid("The user is not the owner of the blog");
+                    return StatusCode((int)HttpStatusCode.Forbidden, "The user is not the owner of the blog.");
 
                 await blogService.DeleteAsync(id);
             }
             catch
             {
-                return BadRequest("There's been an error while trying to delete the blog");
+                throw new BlogSystemException("There's been an error while trying to add the blog entry");
             }
 
             return NoContent();
