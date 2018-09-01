@@ -24,7 +24,7 @@
 
         #region Tests
         [Fact]
-        public async Task AddOrUpdateAsync_WhenExisting_ReturnsBlog()
+        public async Task AddOrUpdateAsync_WhenNotExisting_ReturnsBlog()
         {
             // Arrange
             var blog = new Blog()
