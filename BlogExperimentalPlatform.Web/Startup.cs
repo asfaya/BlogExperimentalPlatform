@@ -6,6 +6,7 @@ namespace BlogExperimentalPlatform.Web
     using AutoMapper;
     using BlogExperimentalPlatform.Data;
     using BlogExperimentalPlatform.Web.AutofacConfig;
+    using BlogExperimentalPlatform.Web.Middlewares;
     using BlogExperimentalPlatform.Web.Security;
     using BlogExperimentalPlatform.Web.Settings;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -95,15 +96,18 @@ namespace BlogExperimentalPlatform.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+            // As for use of the middleware
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // else
+            // {
+            //     app.UseExceptionHandler("/Error");
+            //     app.UseHsts();
+            // }
+
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -7,6 +7,7 @@
     using AutoMapper;
     using BlogExperimentalPlatform.Business.Entities;
     using BlogExperimentalPlatform.Business.Services;
+    using BlogExperimentalPlatform.Utils;
     using BlogExperimentalPlatform.Web.Classes;
     using BlogExperimentalPlatform.Web.DTOs;
     using FluentValidation.AspNetCore;
@@ -86,7 +87,7 @@
             {
                 var blog = await blogService.GetAsync(blogEntryDTO.Blog.Id);
                 if (blog.OwnerId != LoggedInUserId)
-                    return Forbid("The user is not the owner of the blog");
+                    return StatusCode((int)HttpStatusCode.Forbidden, "The user is not the owner of the blog.");
 
                 var blogEntry = mapper.Map<BlogEntry>(blogEntryDTO);
                 blogEntry = await blogEntryService.AddOrUpdateAsync(blogEntry);
@@ -94,7 +95,7 @@
             }
             catch
             {
-                return BadRequest("There's been an error while trying to add the blog entry");
+                throw new BlogSystemException("There's been an error while trying to add the blog entry");
             }
 
             return Ok(blogEntryDTO);
@@ -115,7 +116,7 @@
             {
                 var blogEntry = await blogEntryService.GetAsync(id, be => be.Blog);
                 if (blogEntry.Blog.OwnerId != LoggedInUserId)
-                    return Forbid("The user is not the owner of the blog");
+                    return StatusCode((int)HttpStatusCode.Forbidden, "The user is not the owner of the blog.");
 
                 mapper.Map<BlogEntryDTO, BlogEntry>(blogEntryDTO, blogEntry);
                 blogEntry = await blogEntryService.AddOrUpdateAsync(blogEntry);
@@ -123,7 +124,7 @@
             }
             catch
             {
-                return BadRequest("There's been an error while trying to update the blog entry");
+                throw new BlogSystemException("There's been an error while trying to add the blog entry");
             }
 
             return Ok(blogEntryDTO);
