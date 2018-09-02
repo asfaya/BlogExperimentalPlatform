@@ -26,31 +26,11 @@
         public async Task AddOrUpdateAsync_WhenExisting_ReturnsBlogEntry()
         {
             // Arrange
-            var blogEntry = new BlogEntry()
-            {
-                Id = 1,
-                Title = "Test Blog Entry",
-                Content = "Test Blog Entry Content",
-                BlogId = 1,
-                CreationDate = DateTime.Now,
-                LastUpdated = DateTime.MinValue,
-                EntryUpdates = null,
-                Status = BlogEntryStatus.Public,
-                Deleted = false
-            };
+            var blogEntry = new BlogEntry() { Id = 1, Title = "Test Blog Entry", Content = "Test Blog Entry Content", BlogId = 1, CreationDate = DateTime.Now, LastUpdated = DateTime.MinValue,
+                EntryUpdates = null, Status = BlogEntryStatus.Public, Deleted = false };
 
-            var resultBlogEntry = new BlogEntry()
-            {
-                Id = blogEntry.Id,
-                Title = blogEntry.Title,
-                Content = blogEntry.Content,
-                BlogId = blogEntry.BlogId,
-                CreationDate = blogEntry.CreationDate,
-                LastUpdated = DateTime.Now,
-                EntryUpdates = null,
-                Status = blogEntry.Status,
-                Deleted = blogEntry.Deleted
-            };
+            var resultBlogEntry = new BlogEntry() { Id = blogEntry.Id, Title = blogEntry.Title, Content = blogEntry.Content, BlogId = blogEntry.BlogId, CreationDate = blogEntry.CreationDate,
+                LastUpdated = DateTime.Now, EntryUpdates = null, Status = blogEntry.Status, Deleted = blogEntry.Deleted };
 
             blogEntryRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<BlogEntry>()))
@@ -79,18 +59,8 @@
         public async Task AddOrUpdateAsync_WhenNew_ReturnsBlogEntryWithId()
         {
             // Arrange
-            var blogEntry = new BlogEntry()
-            {
-                Id = 0,
-                Title = "Test Blog Entry",
-                Content = "Test Blog Entry Content",
-                BlogId = 1,
-                CreationDate = DateTime.MinValue,
-                LastUpdated = DateTime.MinValue,
-                EntryUpdates = null,
-                Status = BlogEntryStatus.Public,
-                Deleted = false
-            };
+            var blogEntry = new BlogEntry() { Id = 0, Title = "Test Blog Entry", Content = "Test Blog Entry Content", BlogId = 1, CreationDate = DateTime.MinValue,
+                LastUpdated = DateTime.MinValue, EntryUpdates = null, Status = BlogEntryStatus.Public, Deleted = false };
 
             var expectedCreationDateTime = DateTime.Now;
 

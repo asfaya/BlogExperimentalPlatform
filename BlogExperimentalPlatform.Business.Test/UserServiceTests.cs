@@ -28,14 +28,7 @@ namespace BlogExperimentalPlatform.Business.Test
         public async Task AuthenticateAsync_WhenCorrect_ReturnsUser()
         {
             // Arrange
-            var user = new User()
-            {
-                Id = 1,
-                UserName = "jdoe",
-                FullName = "John Doe",
-                Password = "d41e98d1eafa6d6011d3a70f1a5b92f0",
-                Deleted = false
-            };
+            var user = new User() { Id = 1, UserName = "jdoe", FullName = "John Doe", Password = "d41e98d1eafa6d6011d3a70f1a5b92f0", Deleted = false };
 
             userRepositoryMock
                 .Setup(m => m.GetUserByUserNameAsync(It.IsAny<string>()))
@@ -61,14 +54,7 @@ namespace BlogExperimentalPlatform.Business.Test
         public async Task AuthenticateAsync_WhenNotExists_ThrowsException()
         {
             // Arrange
-            var user = new User()
-            {
-                Id = 1,
-                UserName = "jdoe",
-                FullName = "John Doe",
-                Password = "xxxxxx",
-                Deleted = false
-            };
+            var user = new User() { Id = 1, UserName = "jdoe", FullName = "John Doe", Password = "xxxxxx", Deleted = false };
 
             userRepositoryMock
                 .Setup(m => m.GetUserByUserNameAsync(It.IsAny<string>()))
@@ -119,14 +105,7 @@ namespace BlogExperimentalPlatform.Business.Test
         public async Task GetUserByUserNameAsync_WhenExists_ReturnsUser()
         {
             // Arrange
-            var user = new User()
-            {
-                Id = 1,
-                UserName = "jdoe",
-                FullName = "John Doe",
-                Password = "xxxxxx",
-                Deleted = false
-            };
+            var user = new User() { Id = 1, UserName = "jdoe", FullName = "John Doe", Password = "xxxxxx", Deleted = false };
 
             userRepositoryMock
                 .Setup(m => m.GetUserByUserNameAsync(It.IsAny<string>()))

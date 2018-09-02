@@ -27,25 +27,9 @@
         public async Task AddOrUpdateAsync_WhenExisting_ReturnsBlog()
         {
             // Arrange
-            var blog = new Blog()
-            {
-                Id = 1,
-                Name = "Test Blog",
-                OwnerId = 1,
-                CreationDate = DateTime.MinValue,
-                Entries = null,
-                Deleted = false
-            };
+            var blog = new Blog() { Id = 1, Name = "Test Blog", OwnerId = 1, CreationDate = DateTime.MinValue, Entries = null, Deleted = false };
 
-            var resultBlog = new Blog()
-            {
-                Id = blog.Id,
-                Name = blog.Name,
-                OwnerId = blog.OwnerId,
-                CreationDate = blog.CreationDate,
-                Entries = null,
-                Deleted = blog.Deleted
-            };
+            var resultBlog = new Blog() { Id = blog.Id, Name = blog.Name, OwnerId = blog.OwnerId, CreationDate = blog.CreationDate, Entries = null, Deleted = blog.Deleted };
 
             blogRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<Blog>()))
@@ -68,25 +52,9 @@
         {
             // Arrange
 
-            var blog = new Blog()
-            {
-                Id = 0,
-                Name = "Test Blog",
-                OwnerId = 1,
-                CreationDate = DateTime.MinValue,
-                Entries = null,
-                Deleted = false
-            };
+            var blog = new Blog() { Id = 0, Name = "Test Blog", OwnerId = 1, CreationDate = DateTime.MinValue, Entries = null, Deleted = false };
 
-            var resultBlog = new Blog()
-            {
-                Id = 1,
-                Name = blog.Name,
-                OwnerId = blog.OwnerId,
-                CreationDate = DateTime.Now,
-                Entries = null,
-                Deleted = false
-            };
+            var resultBlog = new Blog() { Id = 1, Name = blog.Name, OwnerId = blog.OwnerId, CreationDate = DateTime.Now, Entries = null, Deleted = false };
             
             blogRepositoryMock
                 .Setup(m => m.AddOrUpdateAsync(It.IsAny<Blog>()))

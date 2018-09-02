@@ -6,9 +6,11 @@ namespace BlogExperimentalPlatform.Web
     using AutoMapper;
     using BlogExperimentalPlatform.Data;
     using BlogExperimentalPlatform.Web.AutofacConfig;
+    using BlogExperimentalPlatform.Web.DTOs;
     using BlogExperimentalPlatform.Web.Middlewares;
     using BlogExperimentalPlatform.Web.Security;
     using BlogExperimentalPlatform.Web.Settings;
+    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -74,6 +76,7 @@ namespace BlogExperimentalPlatform.Web
             services.AddAutoMapper();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
                 .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             // In production, the Angular files will be served from this directory
