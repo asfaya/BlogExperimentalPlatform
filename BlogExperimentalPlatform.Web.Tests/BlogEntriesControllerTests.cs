@@ -493,6 +493,133 @@
         }
         #endregion
 
+        #region Delete
+        [Fact]
+        public async Task Delete_WhenSuccess_ReturnsNoContent()
+        {
+            // Arrange
+            var blogEntry = new BlogEntry() { Id = 1, Title = "Title", Content = "Content", EntryUpdates = new List<BlogEntryUpdate>(), Status = BlogEntryStatus.Public,
+                CreationDate = DateTime.Now, LastUpdated = DateTime.Now,
+                BlogId = 1, Deleted = false,
+                Blog = new Blog() { Id = 1, Name = "Test blog", CreationDate = DateTime.Now, Entries = null, Deleted = false, OwnerId = 1, Owner = null }
+            };
+
+            blogEntryServiceMock
+                .Setup(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()))
+                .ReturnsAsync(blogEntry);
+
+            var controller = GetController(mapper);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "jdoe"),
+                        new Claim(ClaimTypes.Sid, "1")
+                    }, "jwt"))
+                }
+            };
+
+            // Act
+            var result = await controller.Delete(1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<NoContentResult>(result);
+
+            blogEntryServiceMock.Verify(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()), Times.Once);
+            blogEntryServiceMock.Verify(m => m.DeleteAsync(It.IsAny<int>()), Times.Once);
+
+        }
+
+        [Fact]
+        public async Task Delete_WhenUserNotOwner_ReturnsForbidden()
+        {
+            // Arrange
+            var blogEntry = new BlogEntry() { Id = 1, Title = "Title", Content = "Content", EntryUpdates = new List<BlogEntryUpdate>(), Status = BlogEntryStatus.Public,
+                CreationDate = DateTime.Now, LastUpdated = DateTime.Now, BlogId = 1, Deleted = false,
+                Blog = new Blog() { Id = 1, Name = "Test blog", CreationDate = DateTime.Now, Entries = null, Deleted = false, OwnerId = 1, Owner = null }
+            };
+
+            blogEntryServiceMock
+                .Setup(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()))
+                .ReturnsAsync(blogEntry);
+
+            blogServiceMock
+                .Setup(m => m.DeleteAsync(It.IsAny<int>()))
+                .Verifiable();
+
+            var controller = GetController(mapper);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "jdoe"),
+                        new Claim(ClaimTypes.Sid, "2")
+                    }, "jwt"))
+                }
+            };
+
+            // Act
+            var result = await controller.Delete(1);
+
+            // Assert
+            Assert.NotNull(result);
+            var forbidResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(403, forbidResult.StatusCode);
+
+            blogEntryServiceMock.Verify(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()), Times.Once);
+            blogEntryServiceMock.Verify(m => m.DeleteAsync(It.IsAny<int>()), Times.Never);
+
+        }
+
+        [Fact]
+        public async Task Delete_WhenException_ThrowsBlogSystemException()
+        {
+            // Arrange
+            var blogEntry = new BlogEntry() { Id = 1, Title = "Title", Content = "Content", EntryUpdates = new List<BlogEntryUpdate>(), Status = BlogEntryStatus.Public,
+                CreationDate = DateTime.Now, LastUpdated = DateTime.Now, BlogId = 1, Deleted = false,
+                Blog = new Blog() { Id = 1, Name = "Test blog", CreationDate = DateTime.Now, Entries = null, Deleted = false, OwnerId = 1, Owner = null }
+            };
+
+            blogEntryServiceMock
+                .Setup(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()))
+                .ReturnsAsync(blogEntry);
+
+            blogEntryServiceMock
+                .Setup(m => m.DeleteAsync(It.IsAny<int>()))
+                .Throws<Exception>();
+
+            var controller = GetController(mapper);
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "jdoe"),
+                        new Claim(ClaimTypes.Sid, "1")
+                    }, "jwt"))
+                }
+            };
+
+            var message = "There's been an error while trying to delete the blog entry";
+
+            // Act
+            var exception = await Record.ExceptionAsync(() => controller.Delete(1));
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<BlogSystemException>(exception);
+            Assert.Equal(message, exception.Message);
+
+            blogEntryServiceMock.Verify(m => m.GetAsync(It.IsAny<int>(), It.IsAny<Expression<Func<BlogEntry, object>>>()), Times.Once);
+            blogEntryServiceMock.Verify(m => m.DeleteAsync(It.IsAny<int>()), Times.Once);
+        }
+        #endregion
         #endregion
 
         #region Private Helper Methods

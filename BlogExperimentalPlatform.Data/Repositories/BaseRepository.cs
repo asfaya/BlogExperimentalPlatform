@@ -168,7 +168,7 @@
         public virtual async Task DeleteAsync(int id)
         {
             // Soft delete implementation
-            var entity = await BlogContext.Blogs
+            var entity = await BlogContext.Set<T>()
                 .FirstOrDefaultAsync(e => e.Id == id);
             entity.Deleted = true;
             await BlogContext.SaveChangesAsync();
