@@ -205,6 +205,45 @@
         }
         #endregion
 
+        #region Delete
+        [Fact]
+        public async Task BlogEntriesApi_Delete_ReturnNoContent()
+        {
+            // Arrange
+
+            //Act
+            var response = await client.DeleteAsync("api/blogentries/2");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task BlogEntriesApi_Delete_NotOwner_ReturnForbidden()
+        {
+            // Arrange
+
+            //Act
+            var response = await client.DeleteAsync("api/blogentries/3");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task BlogEntriesApi_Delete_NotExistent_ReturnBadRequest()
+        {
+            // Arrange
+
+            //Act
+            var response = await client.DeleteAsync("api/blogentries/10");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+        #endregion
+
         #endregion
     }
 }
