@@ -73,4 +73,9 @@ export class BlogEntryDataService extends BaseDataService {
       tap(_ => {}),
       catchError(this.handleError));
   }
+
+  deleteBlogEntry(id: number): Observable<any> {
+    return this.http.delete(this.baseUrl + "api/blogEntries/" + id).pipe(
+      catchError(this.handleError));
+  }
 }

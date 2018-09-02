@@ -22,6 +22,7 @@ export class BlogEntryListComponent extends BaseComponent {
   blogs           : IBlog[];
   blogEntries     : IBlogEntry[];
   selectedBlogId  : number;
+  selectedBlog    : IBlog;
   loading         : boolean = true;
 
   public itemsPerPage: number = 10;
@@ -63,6 +64,7 @@ export class BlogEntryListComponent extends BaseComponent {
           else {
             this.blogs = blogArray;
             this.selectedBlogId = blogArray[0].id;
+            this.selectedBlog = blogArray[0];
           }
         }));
   }
@@ -78,6 +80,7 @@ export class BlogEntryListComponent extends BaseComponent {
 
   onBlogChanged(blogId: number): void {
     this.selectedBlogId = blogId;
+    this.blogs.forEach(b => { if (b.id == this.selectedBlogId) this.selectedBlog = b; })
     this.loadBlogEntries()
       .subscribe(() => { },
         (error: any): void => {
@@ -98,4 +101,24 @@ export class BlogEntryListComponent extends BaseComponent {
   editEntry(blogEntryId: number): void {
     this.router.navigate(["/blogEntries/form", this.selectedBlogId, blogEntryId]);
   }  
+
+  removeBlogEntry(blogEntry: IBlogEntry): void {
+    var user = this.getCurrentUser();
+    if (user && user.id == this.selectedBlog.owner.id) {
+      this.notificationService.openConfirmationDialog("Are you sure you want to delete the entry?",
+        () => {
+          this.dataService.deleteBlogEntry(blogEntry.id)
+            .subscribe(() => {
+              this.notificationService.printSuccessMessage(blogEntry.title + " has been deleted.");
+              this.loadBlogEntries();
+            },
+              (error: any): void => {
+                this.checkForErrorsOnRequest(error, "There's been an error while deleting blog '" + blogEntry.title + "'");
+              });
+        });
+    }
+    else {
+      this.notificationService.printErrorMessage("You have to be logged in and the owner in order to delete a blog");
+    }
+  }
 }

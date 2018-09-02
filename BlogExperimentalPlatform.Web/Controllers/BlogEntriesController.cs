@@ -133,6 +133,29 @@
             return Ok(blogEntryDTO);
         }
 
+        // DELETE api/blogEntries/5
+        [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var blogEntry = await blogEntryService.GetAsync(id, be => be.Blog);
+                if (blogEntry.Blog.OwnerId != LoggedInUserId)
+                    return StatusCode((int)HttpStatusCode.Forbidden, "The user is not the owner of the blog.");
+
+                await blogEntryService.DeleteAsync(id);
+            }
+            catch
+            {
+                throw new BlogSystemException("There's been an error while trying to delete the blog entry");
+            }
+
+            return NoContent();
+        }
         #endregion
     }
 }

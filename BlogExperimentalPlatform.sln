@@ -9,15 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Bu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Data", "BlogExperimentalPlatform.Data\BlogExperimentalPlatform.Data.csproj", "{6EC9C7D4-E3E2-403E-94E0-6C1ACD9907AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Business.Test", "BlogExperimentalPlatform.Business.Test\BlogExperimentalPlatform.Business.Test.csproj", "{230A3587-E571-48B4-8C72-4BF341E87A7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Business.Tests", "BlogExperimentalPlatform.Business.Tests\BlogExperimentalPlatform.Business.Tests.csproj", "{230A3587-E571-48B4-8C72-4BF341E87A7C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Utils", "BlogExperimentalPlatform.Utils\BlogExperimentalPlatform.Utils.csproj", "{0FE9C175-D658-4F55-964F-3AA8CD48BE0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Data.Test", "BlogExperimentalPlatform.Data.Test\BlogExperimentalPlatform.Data.Test.csproj", "{5BFA05FF-808B-4F05-8DB9-A513A0B0DF92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Data.Tests", "BlogExperimentalPlatform.Data.Tests\BlogExperimentalPlatform.Data.Tests.csproj", "{5BFA05FF-808B-4F05-8DB9-A513A0B0DF92}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.Web.Tests", "BlogExperimentalPlatform.Web.Tests\BlogExperimentalPlatform.Web.Tests.csproj", "{717AE22C-37B9-45A4-B665-581061DEDF62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogExperimentalPlatform.IntegrationTests", "BlogExperimentalPlatform.IntegrationTests\BlogExperimentalPlatform.IntegrationTests.csproj", "{E5AE9A6A-26DC-4C52-87CC-3AE0442CE543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogExperimentalPlatform.IntegrationTests", "BlogExperimentalPlatform.IntegrationTests\BlogExperimentalPlatform.IntegrationTests.csproj", "{E5AE9A6A-26DC-4C52-87CC-3AE0442CE543}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
