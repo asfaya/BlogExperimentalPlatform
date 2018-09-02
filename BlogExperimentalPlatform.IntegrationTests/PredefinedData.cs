@@ -35,6 +35,28 @@ namespace BlogExperimentalPlatform.IntegrationTests
                         }
                     }
                 }
+            },
+            new Blog { Name = "AF Second Blog", OwnerId = 1, CreationDate = DateTime.Now, Deleted = false, Entries = new List<BlogEntry>() {
+                        new BlogEntry() { Title = "Fifth Entry", Content = "Fifth Entry Content", CreationDate = DateTime.Now, LastUpdated = DateTime.Now, Status = BlogEntryStatus.Public, Deleted = false, EntryUpdates = new List<BlogEntryUpdate>() {
+                                new BlogEntryUpdate() { UpdateMoment = DateTime.Now }
+                        }
+                    },
+                        new BlogEntry() { Title = "Sixth Entry", Content = "Sixth Entry Content", CreationDate = DateTime.Now, LastUpdated = DateTime.Now, Status = BlogEntryStatus.Public, Deleted = false, EntryUpdates = new List<BlogEntryUpdate>() {
+                                new BlogEntryUpdate() { UpdateMoment = DateTime.Now }
+                        }
+                    }
+                }
+            },
+             new Blog { Name = "JD Second Blog", OwnerId = 2, CreationDate = DateTime.Now, Deleted = false, Entries = new List<BlogEntry>() {
+                        new BlogEntry() { Title = "Seventh Entry", Content = "Seventh Entry Content", CreationDate = DateTime.Now, LastUpdated = DateTime.Now, Status = BlogEntryStatus.Public, Deleted = false, EntryUpdates = new List<BlogEntryUpdate>() {
+                                new BlogEntryUpdate() { UpdateMoment = DateTime.Now }
+                        }
+                    },
+                        new BlogEntry() { Title = "Eighth Entry", Content = "Eighth Entry Content", CreationDate = DateTime.Now, LastUpdated = DateTime.Now, Status = BlogEntryStatus.Public, Deleted = false, EntryUpdates = new List<BlogEntryUpdate>() {
+                                new BlogEntryUpdate() { UpdateMoment = DateTime.Now }
+                        }
+                    }
+                }
             }
         };
     }

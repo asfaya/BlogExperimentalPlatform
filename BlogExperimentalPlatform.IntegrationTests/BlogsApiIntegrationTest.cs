@@ -2,54 +2,20 @@ namespace BlogExperimentalPlatform.IntegrationTests
 {
     using BlogExperimentalPlatform.Web.DTOs;
     using FluentAssertions;
-    using Microsoft.AspNetCore;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.TestHost;
-    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
     using System.Net.Http;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Xunit;
 
-
-    public class BlogsApiIntegrationTest
+    public class BlogsApiIntegrationTest : BaseBlogIntegrationTest
     {
-        #region Properties
-        private readonly TestServer testServer;
-        private readonly HttpClient client;
-
-        public object PlatformServices { get; }
-
-        private string authorizarion = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhc2ZheWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYXNmYXlhIiwianRpIjoiYjBkNDYyNjEtYWE5OC00OWI3LTg2OGEtY2FmNjI4NDUxNjYxIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMSIsImV4cCI6MTUzNTkwNjg3MywiaXNzIjoiQmxvZ0V4cGVyaW1lbnRhbFBsYXRmb3JtLlNlY3VyaXR5LkJlYXJlciIsImF1ZCI6IkJsb2dFeHBlcmltZW50YWxQbGF0Zm9ybS5TZWN1cml0eS5CZWFyZXIifQ.qVltJc-7TOL1mvcOd8xQEUcsifftGlwflm5ou0UkQn4";
-        #endregion
-
-        #region Constructor
-        public BlogsApiIntegrationTest()
-        {
-            var integrationTestsPath = GetApplicationRoot(); 
-            var applicationPath = Path.GetFullPath(Path.Combine(integrationTestsPath, "../BlogExperimentalPlatform.Web"));
-
-            testServer = new TestServer(
-                WebHost.CreateDefaultBuilder()
-                .UseStartup<TestStartup>()
-                .UseContentRoot(applicationPath)
-                .UseConfiguration(new ConfigurationBuilder()
-                    .SetBasePath(applicationPath) 
-                    .AddJsonFile("appsettings.json")
-                    .Build()));
-
-            client = testServer.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", authorizarion);
-        }
-        #endregion
-
         #region Tests
+
+        #region Get
         [Fact]
         public async Task BlogsApi_Get_ReturnBlogDTOCollection()
         {
@@ -85,7 +51,9 @@ namespace BlogExperimentalPlatform.IntegrationTests
 
             blogs.Should().BeAssignableTo<BlogDTO>();
         }
+        #endregion
 
+        #region Post
         [Fact]
         public async Task BlogsApi_Post_ReturnBlogDTO()
         {
@@ -111,6 +79,26 @@ namespace BlogExperimentalPlatform.IntegrationTests
         }
 
         [Fact]
+        public async Task BlogsApi_Post_BadParameters_ReturnBadRequest()
+        {
+            // Arrange
+            var blogDTO = new BlogDTO() { Id = 0, Name = "", CreationDate = DateTime.MinValue, Entries = new List<BlogEntryDTO>(), Deleted = false,
+                Owner = new UserDTO() { Id = 1, UserName = "asfaya", FullName = "Andres Faya", Token = "", Deleted = false }
+            };
+
+            string stringData = JsonConvert.SerializeObject(blogDTO);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PostAsync("api/blogs/", contentData);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+        #endregion
+
+        #region Put
+        [Fact]
         public async Task BlogsApi_Put_ReturnBlogDTO()
         {
             // Arrange
@@ -135,28 +123,99 @@ namespace BlogExperimentalPlatform.IntegrationTests
         }
 
         [Fact]
-        public async Task BlogsApi_Delete_ReturnBlogDTO()
+        public async Task BlogsApi_Put_NotOwner_ReturnForbidden()
+        {
+            // Arrange
+            var blogDTO = new BlogDTO() { Id = 2, Name = "Test blog", CreationDate = DateTime.Now, Entries = new List<BlogEntryDTO>(), Deleted = false,
+                Owner = new UserDTO() { Id = 2, UserName = "asfaya", FullName = "Andres Faya", Token = "", Deleted = false }
+            };
+
+            string stringData = JsonConvert.SerializeObject(blogDTO);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("api/blogs/2", contentData);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task BlogsApi_Put_ParametersMismatch_ReturnForbidden()
+        {
+            // Arrange
+            var blogDTO = new BlogDTO() { Id = 2, Name = "Test blog", CreationDate = DateTime.Now, Entries = new List<BlogEntryDTO>(), Deleted = false,
+                Owner = new UserDTO() { Id = 2, UserName = "asfaya", FullName = "Andres Faya", Token = "", Deleted = false }
+            };
+
+            string stringData = JsonConvert.SerializeObject(blogDTO);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("api/blogs/10", contentData);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task BlogsApi_Put_NotExistent_ReturnBadRequest()
+        {
+            // Arrange
+            var blogDTO = new BlogDTO() { Id = 10, Name = "Test blog", CreationDate = DateTime.Now, Entries = new List<BlogEntryDTO>(), Deleted = false,
+                Owner = new UserDTO() { Id = 2, UserName = "asfaya", FullName = "Andres Faya", Token = "", Deleted = false }
+            };
+
+            string stringData = JsonConvert.SerializeObject(blogDTO);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync("api/blogs/10", contentData);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+        #endregion
+
+        #region Delete
+        [Fact]
+        public async Task BlogsApi_Delete_ReturnNoContent()
         {
             // Arrange
             
             //Act
-            var response = await client.DeleteAsync("api/blogs/1");
+            var response = await client.DeleteAsync("api/blogs/3");
 
             // Assert
             response.EnsureSuccessStatusCode();
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
+
+        [Fact]
+        public async Task BlogsApi_Delete_NotOwner_ReturnForbidden()
+        {
+            // Arrange
+
+            //Act
+            var response = await client.DeleteAsync("api/blogs/2");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task BlogsApi_Delete_NotExistent_ReturnBadRequest()
+        {
+            // Arrange
+
+            //Act
+            var response = await client.DeleteAsync("api/blogs/10");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
         #endregion
 
-        #region Helper Methods
-        private string GetApplicationRoot()
-        {
-            var exePath = Path.GetDirectoryName(System.Reflection
-                              .Assembly.GetExecutingAssembly().CodeBase);
-            Regex appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
-            var appRoot = appPathMatcher.Match(exePath).Value;
-            return appRoot;
-        }
         #endregion
     }
 }
