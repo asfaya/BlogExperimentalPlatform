@@ -130,7 +130,7 @@
             }
             catch
             {
-                throw new BlogSystemException("There's been an error while trying to add the blog entry");
+                throw new BlogSystemException("There's been an error while trying to delete the blog entry");
             }
 
             return NoContent();

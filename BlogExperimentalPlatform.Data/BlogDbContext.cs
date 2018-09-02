@@ -7,7 +7,7 @@
     public class BlogDbContext : DbContext
     {
         #region Constructor
-        public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options) { }
+        public BlogDbContext(DbContextOptions options) : base(options) { }
         #endregion
 
         #region Properties

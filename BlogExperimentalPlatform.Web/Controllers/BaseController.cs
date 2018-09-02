@@ -53,15 +53,5 @@
             }
         }
         #endregion
-
-        #region Methods
-        protected async Task<User> GetCurrentUser()
-        {
-            if (LoggedInUserName != null)
-                return await UserService.GetUserByUserNameAsync(this.LoggedInUserName);
-            else
-                return null;
-        }
-        #endregion
     }
 }

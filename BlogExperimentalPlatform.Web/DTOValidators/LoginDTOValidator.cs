@@ -10,8 +10,8 @@
         {
             RuleSet("Login", () =>
             {
-                RuleFor(l => l.UserName).NotEmpty().NotNull().WithMessage("User name is mandatory.");
-                RuleFor(l => l.Password).NotEmpty().NotNull().WithMessage("Password is mandatory");
+                RuleFor(l => l.UserName).NotEmpty().WithMessage("User name is mandatory.");
+                RuleFor(l => l.Password).NotEmpty().WithMessage("Password is mandatory");
             });
         }
     }

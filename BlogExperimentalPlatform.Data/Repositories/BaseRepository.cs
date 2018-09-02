@@ -17,9 +17,9 @@
         #endregion
 
         #region Constructor
-        public BaseRepository(BlogDbContext ctx)
+        public BaseRepository(BlogDbContext context)
         {
-            this.blogContext = ctx ?? throw new ArgumentNullException("Error on BlogDbContext DI");
+            this.blogContext = context ?? throw new ArgumentNullException("Error on BlogDbContext DI");
         }
         #endregion
 
