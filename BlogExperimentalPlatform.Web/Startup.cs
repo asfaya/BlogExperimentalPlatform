@@ -67,18 +67,14 @@ namespace BlogExperimentalPlatform.Web
                 options.AutomaticAuthentication = false;
             });
 
-            // Add EF core services.
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<BlogDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("Blog")));
+            ConfigureDatabases(services);
 
             // AutoMapper
             services.AddAutoMapper();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
+            // Add MVC
+            ConfigureMvc(services);
+            
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -97,7 +93,7 @@ namespace BlogExperimentalPlatform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
+        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
         {
             // As for use of the middleware
             // if (env.IsDevelopment())
@@ -111,7 +107,7 @@ namespace BlogExperimentalPlatform.Web
             // }
             app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
-            app.UseHttpsRedirection();
+            ConfigureHttps(app);
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -126,6 +122,31 @@ namespace BlogExperimentalPlatform.Web
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            ConfigureSpa(app, env);
+        }
+
+        protected virtual void ConfigureMvc(IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+        }
+
+        protected virtual void ConfigureDatabases(IServiceCollection services)
+        {
+            // Add EF core services.
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<BlogDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("Blog")));
+        }
+
+        protected virtual void ConfigureHttps(IApplicationBuilder app)
+        {
+            app.UseHttpsRedirection();
+        }
+
+        protected virtual void ConfigureSpa(IApplicationBuilder app, IHostingEnvironment env)
+        {
             app.UseSpa(spa =>
             {
                 /* To learn more about options for serving an Angular SPA from ASP.NET Core,
