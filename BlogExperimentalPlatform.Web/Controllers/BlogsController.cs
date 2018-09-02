@@ -92,6 +92,9 @@
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (id != blogDTO.Id)
+                return BadRequest("Parameters mismatch");
+
             try
             {
                 var blog = await blogService.GetAsync(id);
