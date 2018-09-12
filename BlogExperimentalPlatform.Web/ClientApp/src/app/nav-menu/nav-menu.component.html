@@ -1,40 +1,34 @@
 <div class='main-nav'>
-  <div class='navbar navbar-inverse'>
-      <div class='navbar-header'>
-          <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse' [attr.aria-expanded]='isExpanded' (click)='toggle()'>
-              <span class='sr-only'>Toggle navigation</span>
-              <span class='icon-bar'></span>
-              <span class='icon-bar'></span>
-              <span class='icon-bar'></span>
-          </button>
+  <div class='navbar navbar-dark bg-dark navbar-expand-sm'>
+      <div class='navbar-brand'>
           <a class='navbar-brand' [routerLink]='["/"]'>Experimental Blog</a>
       </div>
       <div class='clearfix'></div>
       <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
-        <ul class='nav navbar-nav'>
-          <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a [routerLink]='["/"]' (click)='collapse()'>
-              <span class='glyphicon glyphicon-home'></span> Home
+        <ul class='navbar-nav flex-column'>
+          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
+            <a class="nav-link" [routerLink]='["/"]' (click)='collapse()'>
+              <span class='fa fa-home'></span> Home
             </a>
           </li>
-          <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/blogs"]' (click)='collapse()'>
-              <span class='glyphicon glyphicon-th-list'></span> Blogs
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link" [routerLink]='["/blogs"]' (click)='collapse()'>
+              <span class='fa fa-sun-o'></span> Blogs
             </a>
           </li>
-          <li [routerLinkActive]='["link-active"]'>
-            <a [routerLink]='["/blogEntries"]' (click)='collapse()'>
-              <span class='glyphicon glyphicon-th-list'></span> Blog Entries
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link" [routerLink]='["/blogEntries"]' (click)='collapse()'>
+              <span class='fa fa-sun-o'></span> Blog Entries
             </a>
           </li>
-          <li [routerLinkActive]='["link-active"]' *ngIf="!isLogged()">
-            <a [routerLink]='["/login"]' (click)='collapse()'>
-              <span class='glyphicon glyphicon-th-list'></span> Login
+          <li class="nav-item" [routerLinkActive]='["link-active"]' *ngIf="!isLogged()">
+            <a class="nav-link" [routerLink]='["/login"]' (click)='collapse()'>
+              <span class='fa fa-sun-o'></span> Login
             </a>
           </li>
-          <li *ngIf="isLogged()">
-            <a (click)='logout()'>
-              <span class='glyphicon glyphicon-th-list'></span>{{ getUserName() }} Logout
+          <li class="nav-item" *ngIf="isLogged()">
+            <a class="nav-link" (click)='logout()'>
+              <span class='fa fa-graduation-cap'></span>{{ getUserName() }} Logout
             </a>
           </li>
         </ul>
