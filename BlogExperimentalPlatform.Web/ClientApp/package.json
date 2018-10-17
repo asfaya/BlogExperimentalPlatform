@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
     "build:ssr": "npm run build -- --app=ssr --output-hashing=media",
-    "test": "ng test",
+    "e2e": "ng e2e",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "ng": "ng",
+    "start": "ng serve",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "6.1.10",
     "@angular/platform-server": "6.1.10",
     "@angular/router": "6.1.10",
+    "@angular-devkit/build-angular": "~0.8.5",
+    "@angular/compiler-cli": "6.1.10",
     "@nguniversal/module-map-ngfactory-loader": "^6.1.0",
     "alertifyjs": "^1.11.1",
     "aspnet-prerendering": "^3.0.1",
@@ -34,9 +36,7 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.8.5",
     "@angular/cli": "6.2.5",
-    "@angular/compiler-cli": "6.1.10",
     "@angular/language-service": "6.1.10",
     "@types/jasmine": "~2.8.9",
     "@types/jasminewd2": "~2.0.5",
