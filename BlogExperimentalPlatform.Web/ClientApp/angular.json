@@ -28,7 +28,8 @@
               "node_modules/alertifyjs/build/css/themes/bootstrap.min.css"
             ],
             "scripts": [
-              "node_modules/alertifyjs/build/alertify.min.js"
+              "node_modules/alertifyjs/build/alertify.min.js",
+              "node_modules/jquery/dist/jquery.min.js"
             ]
           },
           "configurations": {
