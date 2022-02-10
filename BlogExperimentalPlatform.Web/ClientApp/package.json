@@ -57,6 +57,6 @@
     "typescript": "3.5.3"
   },
   "optionalDependencies": {
-    "node-sass": "^4.13.0"
+    "node-sass": "^7.0.0"
   }
 }
